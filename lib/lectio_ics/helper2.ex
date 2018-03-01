@@ -24,9 +24,20 @@ defmodule LectioIcs.HelperT do
   defp title_list(url) do
     HTTPoison.start
     %HTTPoison.Response{body: body} = HTTPoison.get! url, [], [ ssl: [{:versions, [:'tlsv1.2']}] ]
-    body
+    
+    found = body
       |> Floki.find(".s2bgbox")
-      |> Floki.attribute("data-additionalinfo")
+
+    extra = found 
+      |> Floki.find(".s2skemabrikcontent")
+      |> Enum.map(fn x -> elem(x, 2) end)
+
+    [found
+      |> Floki.attribute("data-additionalinfo"),
+
+    extra]
+    |> Enum.zip
+    |> Enum.map(fn {k, v} -> {k, v |> Floki.text} end)
 
   end
 
@@ -41,78 +52,43 @@ defmodule LectioIcs.HelperT do
   end
 
   def exec(weeks) do
-    Enum.map(weeks, fn x -> 
-      Enum.map(x, fn y -> 
-        create_array(y) 
-        |> IO.inspect |>Enum.reduce(%{}, fn m, acc ->
+    Enum.map(weeks, fn days -> 
+      Enum.map(days, fn lesson -> 
+        create_array(lesson)
+        |> Enum.reduce(%{}, fn m, acc ->
           Map.merge(acc, m, fn
             _k, v1, v2 when is_list(v1) ->
               :lists.reverse([v2 | :lists.reverse(v1)])
             _k, v1, v2 -> [v1, v2]
           end)
-        end)
+        end) 
       end)
     end)
   end
 
   def create_array(lines) do  
-    lines
-      |> split_lines
-      |> Enum.map(fn x -> run_command(x) end)
-      #|> event_state
+    {lesson, text} = lines
+
+    lesson = String.split(lesson, "\n")
+
+    [ %{"meta" => text} | (for line <- lesson, do: filter(line))]
+      |> IO.inspect
+
   end
 
   def split_lines(lines) do
     String.split(lines, "\n")
   end
 
-  def run_command(command) do
-    do_run_command String.split(command, ":"), command
-
-    case String.split(command, ":") do
-      [x, y] -> do_run_command([x, y], command)
-      [x]    -> get_resulting_data(x)
-      x      -> do_run_command(x, command)
-
-    end
-  end
-
-
-  defp do_run_command([a, b, c], line) do
+  def filter(line) do
+    format = Regex.match?(~r/^([0]?[1-9]|[1|2][0-9]|[3][0|1])[\/]([0]?[1-9]|[1][0-2])[-]([0-9]{4}|[0-9]{2}).*$/, line)
     cond do
-      Regex.match?(~r/^([0]?[1-9]|[1|2][0-9]|[3][0|1])[\/]([0]?[1-9]|[1][0-2])[-]([0-9]{4}|[0-9]{2}).*$/, line) ->
-        format_time(line)
-      
-      True -> Map.put(%{}, "other", line) 
-        
-    end
+      line == "Ændret!" -> %{"status" => "CHANGED"}
+      line == "Aflyst!" -> %{"status" => "CANCELLED"}
+      format -> format_time(line)
+      True -> %{"desc" => line}
+     end
   end
-
-  defp do_run_command(["Note", value], line) do
-    Map.put(%{}, "note", value)
-  end
-
-  defp do_run_command(["- " <> data], line) do
-    Map.put(%{}, "note", data)
-  end
-
-  defp do_run_command([item, value], line) when item === "Lektier" or item === "Note" do
-    Map.put(%{}, item, " ")
-  end
-
-  defp do_run_command([item, value], line) do
-    Map.put(%{}, item, value)
-  end
-
-  defp do_run_command(["Ændret!"], line), do: Map.put(%{}, "status", "Ændret!") 
-  defp do_run_command(["Aflyst!"], line), do: Map.put(%{}, "status", "Aflyst!") 
-  defp do_run_command([x], line) do 
-    Map.put(%{}, "status", x) 
-  end
-
-
-  #defp say(thing, count) when count < 100, do: String.duplicate(thing, count)
-  #defp say(thing, _count), do: say(thing, 99) <> " etc"
 
   def format_time(line) do
     #{{2015, 12, 24}, {8, 45, 00}}
@@ -143,14 +119,6 @@ defmodule LectioIcs.HelperT do
     #IO.inspect date
     #extract_team(rest, formatted) 
     formatted   
-  end
-
-  def get_resulting_data(line) when line === "" do
-    Map.put(%{}, "other", " ") 
-  end
-
-  def get_resulting_data(line) do
-    Map.put(%{}, "other", line) 
   end
 
 end

@@ -41,7 +41,7 @@ defmodule LectioIcs.Mixfile do
       {:icalendar, "~> 0.7.0"},
       {:calendar, "~> 0.17.4"},
       {:httpoison, "~> 1.0"},
-      {:floki, "~> 0.14.0"}
+      {:floki, "~> 0.20.0"}
     ]
   end
 end
