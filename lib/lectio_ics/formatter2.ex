@@ -15,6 +15,8 @@ defmodule LectioIcs.FormatterT do
       
     end )
 
+    events = List.flatten events
+
     %ICalendar{ events: events } |> ICalendar.to_ics
 
   
