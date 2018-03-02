@@ -1,36 +1,39 @@
-<div class="jumbotron">
-  <h2><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h2>
-  <p class="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
-</div>
-
-<div class="row marketing">
-  <div class="col-lg-6">
-    <h4>Resources</h4>
-    <ul>
-      <li>
-        <a href="http://phoenixframework.org/docs/overview">Guides</a>
-      </li>
-      <li>
-        <a href="https://hexdocs.pm/phoenix">Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-    </ul>
+<div class="flex-container flex-container-style">
+  <div class="flex-item">
+    <div class="cool">
+      <input class="" id="val" type="text" placeholder="Indsæt Lectio skemalink og tryk enter"></input>
+    <button id="go" type="submit"><i class="icon ion-android-arrow-forward"></i></button>
+    </div>
   </div>
+  
+  <div class="flex-item">
+    <div class="cool_2"></div>
+    <h2 id="link" style="display:none;"></h2>
+    
+    <h2 id="info" style="display:none;">
+      Indsæt linket ind i Google kalender. Det sidste tal i linket kan ændres, alt efter ønskede antal uger indlæst.
+    </h2>
 
-  <div class="col-lg-6">
-    <h4>Help</h4>
-    <ul>
-      <li>
-        <a href="http://groups.google.com/group/phoenix-talk">Mailing list</a>
-      </li>
-      <li>
-        <a href="http://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">@elixirphoenix</a>
-      </li>
-    </ul>
+    <div class="spinner" style="display:none;">
+      <div class="rachel">
+          <div class="body ir"></div>
+
+          <div class="face ir">
+              <div class="pupils ir"></div>
+          </div>
+
+          <div class="hands ir"></div>
+      </div>
+      
+    <div class="message" style="display:none;">
+        <p>Loading...</p>
+        <p>Still Loading...</p>
+        <p>Okay.</p>
+        <p><strong>AYYYY!</strong></p>
+        <p>NOTHING IS GOING TO HAPPEN?!</p>
+        <p>Eh,wait...</p>
+        <p>Shit.</p>
+    </div>
+  </div>
   </div>
 </div>
