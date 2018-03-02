@@ -37,7 +37,7 @@ defmodule LectioIcs.HelperT do
 
     extra]
     |> Enum.zip
-    |> Enum.map(fn {k, v} -> {k, v |> Floki.text} end)
+    |> Enum.map(fn {k, v} -> {k, v |> Floki.text(sep: " ")} end)
 
   end
 
@@ -71,8 +71,7 @@ defmodule LectioIcs.HelperT do
 
     lesson = String.split(lesson, "\n")
 
-    [ %{"meta" => text} | (for line <- lesson, do: filter(line))]
-      |> IO.inspect
+    [ %{:meta => text} | (for line <- lesson, do: filter(line))]
 
   end
 
@@ -83,10 +82,10 @@ defmodule LectioIcs.HelperT do
   def filter(line) do
     format = Regex.match?(~r/^([0]?[1-9]|[1|2][0-9]|[3][0|1])[\/]([0]?[1-9]|[1][0-2])[-]([0-9]{4}|[0-9]{2}).*$/, line)
     cond do
-      line == "Ændret!" -> %{"status" => "CHANGED"}
-      line == "Aflyst!" -> %{"status" => "CANCELLED"}
+      line == "Ændret!" -> %{:status => "CHANGED"}
+      line == "Aflyst!" -> %{:status => "CANCELLED"}
       format -> format_time(line)
-      True -> %{"desc" => line}
+      True -> %{:desc => line}
      end
   end
 
@@ -94,7 +93,6 @@ defmodule LectioIcs.HelperT do
     #{{2015, 12, 24}, {8, 45, 00}}
 
     time_string = String.split(line, " ")
-    IO.inspect line
 
     date = time_string 
       |> Enum.at(0)
@@ -112,8 +110,8 @@ defmodule LectioIcs.HelperT do
       |> Enum.map(fn(x) -> String.to_integer(x) end)
 
     formatted = %{
-      "start_time" => {{Enum.at(date, 2), Enum.at(date, 1), Enum.at(date, 0)}, {Enum.at(start_time, 0), Enum.at(start_time, 1), 00}},
-      "end_time" => {{Enum.at(date, 2), Enum.at(date, 1), Enum.at(date, 0)}, {Enum.at(end_time, 0), Enum.at(end_time, 1), 00}}
+      :start_time => {{Enum.at(date, 2), Enum.at(date, 1), Enum.at(date, 0)}, {Enum.at(start_time, 0), Enum.at(start_time, 1), 00}},
+      :end_time => {{Enum.at(date, 2), Enum.at(date, 1), Enum.at(date, 0)}, {Enum.at(end_time, 0), Enum.at(end_time, 1), 00}}
     }
 
     #IO.inspect date

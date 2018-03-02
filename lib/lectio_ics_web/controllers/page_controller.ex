@@ -2,6 +2,7 @@ defmodule LectioIcsWeb.PageController do
   use LectioIcsWeb, :controller
 
   alias LectioIcs.Helper
+  alias LectioIcs.HelperT
   alias LectioIcs.Formatter
 
   def index(conn, _params) do
@@ -23,15 +24,16 @@ defmodule LectioIcsWeb.PageController do
 
   defp render_all(conn, school_id, student_id, weeks) do
 
-    de = Helper.get(school_id, student_id, weeks)
+    de = HelperT.get(school_id, student_id, weeks)
 
     #IO.inspect de
       #|> List.flatten()
 
     res = de
-      |> List.flatten()
-      |> Enum.map(&Helper.exec/1)
-      |> Formatter.format
+      |> HelperT.exec
+      |> Enum.map(fn x->LectioIcs.FormatterT.format(x) end)
+      |> List.flatten
+      |> Enum.join("")
       |> String.replace("VERSION:2.0\n", "VERSION:2.0\nMETHOD:PUBLISH\nX-PUBLISHED-TTL:PT15M\nX-WR-CALNAME:Lectio skema\nX-WR-TIMEZONE:Europe/Copenhagen\n")
     
     text conn, res
