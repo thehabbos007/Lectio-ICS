@@ -31,9 +31,9 @@ defmodule LectioIcsWeb.PageController do
 
     res = de
       |> HelperT.exec
-      |> Enum.map(fn x->LectioIcs.FormatterT.format(x) end)
       |> List.flatten
-      |> Enum.join("")
+      |> LectioIcs.FormatterT.format
+      #|> IO.inspect
       |> String.replace("VERSION:2.0\n", "VERSION:2.0\nMETHOD:PUBLISH\nX-PUBLISHED-TTL:PT15M\nX-WR-CALNAME:Lectio skema\nX-WR-TIMEZONE:Europe/Copenhagen\n")
     
     text conn, res

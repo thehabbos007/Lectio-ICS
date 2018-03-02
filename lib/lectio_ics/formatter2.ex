@@ -3,7 +3,6 @@ defmodule LectioIcs.FormatterT do
   def format(map) do 
 
     events = Enum.map(map, fn x -> 
-      IO.inspect x
       description = Enum.join(x.desc, "\n")
       desclen = length(x.desc)
       %ICalendar.Event{
@@ -16,8 +15,10 @@ defmodule LectioIcs.FormatterT do
     end )
 
     events = List.flatten events
+    #|> IO.inspect
 
-    %ICalendar{ events: events } |> ICalendar.to_ics
+    %ICalendar{ events: events } 
+    |> ICalendar.to_ics
 
   
   end
