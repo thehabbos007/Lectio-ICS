@@ -14,12 +14,13 @@ defmodule LectioIcsWeb.Router do
   end
 
   scope "/", LectioIcsWeb do
-    pipe_through :browser # Use the default browser stack
-
+    pipe_through :browser
+    # Defnier, at rodden af siden skal fremvise index funktionscontrolelren
     get "/", PageController, :index
-
+    # Definere et nyt omfang i "/api/" og fremad
     scope "/api" do
       pipe_through :api
+      # Der defineres, at der ønskes hjemmesidelink med data, der kalder lectio funktionscontrolelren
       get "/:school_id/:student_id/:weeks", PageController, :lectio
     end
     

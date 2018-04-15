@@ -1,14 +1,20 @@
 <div class="flex-container flex-container-style">
   <div class="flex-item">
     <div class="cool">
-      <input class="" id="val" type="text" placeholder="Indsæt Lectio skemalink og tryk enter"></input>
-    <button id="go" type="submit"><i class="icon ion-android-arrow-forward"></i></button>
+      <input id="link" type="text" placeholder="Indsæt Lectio skemalink og tryk enter"></input>
+      
+      <hr>
+      
+      <input class="no-spin" id="weeks" type="number" placeholder="Antal uger"></input>
+
+      <button id="go" type="submit"><i class="icon ion-android-arrow-forward"></i></button>
+
     </div>
   </div>
   
   <div class="flex-item">
     <div class="cool_2"></div>
-    <h2 id="link" style="display:none;"></h2>
+    <h2 id="webcallink" style="display:none;"></h2>
     
     <h2 id="info" style="display:none;">
       Indsæt linket ind i Google kalender. Det sidste tal i linket kan ændres, alt efter ønskede antal uger indlæst.
